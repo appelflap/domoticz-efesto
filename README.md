@@ -1,6 +1,8 @@
 # domoticz-efesto
 Domoticz Efesto Heater Plugin
 
+Work in progress! Not yet tested.
+
 Short summary
 -------------
 
