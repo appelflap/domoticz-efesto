@@ -11,11 +11,10 @@
 #                              - fail safe (temp in home > setpoint+2 and status == 4, turn it off?)
 #                              - notifications
 #                              - debug only if selected in config
-#                              - add GIT README
 #                              - example Lua code to connect to Tado
 #
 """
-<plugin key="BasePlug" name="Efesto Heater Control" author="appelflap" version="1.0.0" wikilink="http://www.domoticz.com/wiki/plugins/efesto.html" externallink="https://appelflap.me/domoticz/efesto">
+<plugin key="BasePlug" name="Efesto Heater Control" author="appelflap" version="0.1.4" wikilink="http://www.domoticz.com/wiki/plugins/efesto.html" externallink="https://github.com/appelflap/domoticz-efesto">
     <description>
         <h2>Efesto Heater Plugin</h2><br/>
         Overview+.
@@ -51,8 +50,7 @@
             </options>
         </param>
         <param field="Mode3" label="HeaterId" width="150px" required="false" default="FFFFFFFFFFFF"/>
-        <param field="Mode4" label="SessionId" width="150px" required="false" default="5qkbjs4u0k1klo49ht2j9la205"/>
-        <param field="Mode5" label="Remember" width="150px" required="false" default="61c2eabf9c1156bace401a55ad69c48f"/>
+        <param field="Mode4" label="SessionId" width="150px" required="false" default="qwertyuiopasdfghjklzxcvbnm"/>
         <param field="Mode6" label="Debug" width="100px">
             <options>
                 <option label="True" value="Debug"/>
@@ -102,9 +100,7 @@ class BasePlugin:
             'Accept': 'application/json; q=0.01',
             'Origin': self.protocol+'://'+efestoHost, 
             'Referer': self.protocol+'://'+efestoHost+'/en/heaters/action/manage/heater/'+efestoHeaterId+'/',
-            'Cookie': 'PHPSESSID='+efestoSessionId+'; language=en; remember='+efestoRemember,
-            'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; HTC U Ultra Build/OPR1.170623.032; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/68.0.3440.91 Mobile Safari/537.36',
-            'X-Requested-With': 'XMLHttpRequest'
+            'Cookie': 'PHPSESSID='+efestoSessionId+'; language=en'
         }
         self.url = self.protocol+'://'+efestoHost+'/en/ajax/action/frontend/response/ajax/'
                     
