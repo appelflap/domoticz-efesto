@@ -8,7 +8,7 @@ Short summary
 
 Add virtual devices for your Efesto (compatible) heater to your [Domoticz](https://www.domoticz.com/)
 
-Control your pellet heater from Domoticz. For example with a Tado or other smart home thermostat.
+Control your pellet heater from Domoticz. Nice to combine with Tado or other smart home thermostat.
 
 You will need to add the Wifi module to your pellet heater for this to work.
 There is no official API, but the web-app uses an ajax interface that can be used by Domoticz.

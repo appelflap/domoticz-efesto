@@ -12,6 +12,8 @@
 #                              - notifications
 #                              - debug only if selected in config
 #                              - example Lua code to connect to Tado
+#                              - figure out the alarm modes/codes of the device
+#                              - add the optional notifications when switching?
 #
 """
 <plugin key="BasePlug" name="Efesto Heater Control" author="appelflap" version="0.1.4" wikilink="http://www.domoticz.com/wiki/plugins/efesto.html" externallink="https://github.com/appelflap/domoticz-efesto">
