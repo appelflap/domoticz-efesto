@@ -1,6 +1,8 @@
 # domoticz-efesto
 Domoticz Efesto Heater Plugin
 
+For stoves like: Artel Norma
+
 Work in progress! Not yet tested.
 
 Short summary

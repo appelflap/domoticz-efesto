@@ -16,10 +16,9 @@
 #                              - add the optional notifications when switching?
 #
 """
-<plugin key="BasePlug" name="Efesto Heater Control" author="appelflap" version="0.1.4" wikilink="http://www.domoticz.com/wiki/plugins/efesto.html" externallink="https://github.com/appelflap/domoticz-efesto">
+<plugin key="Efesto" name="Efesto Heater Control" author="appelflap" version="0.1.4" wikilink="http://www.domoticz.com/wiki/plugins/efesto.html" externallink="https://github.com/appelflap/domoticz-efesto">
     <description>
-        <h2>Efesto Heater Plugin</h2><br/>
-        Overview+.
+        <h2>Efesto Heater Plugin</h2>
         <h3>Features</h3>
         <ul style="list-style-type:square">
             <li>Automatically makes devices for your heater</li>
@@ -40,7 +39,6 @@
             <li>Smoke Temperature - Output temperature of heater</li>
         </ul>
         <h3>Configuration</h3>
-        Configuration options+.
     </description>
     <params>
         <param field="Address" label="Host URL" width="200px" required="true" default="http://amg.efesto.web2app.it"/>
@@ -48,7 +46,7 @@
         <param field="Mode2" label="Notifications" width="75px">
             <options>
                 <option label="Notify" value="Notify"/>
-                <option label="Disable" value="Disable"  default="true" />
+                <option label="Disable" value="Disable" default="true" />
             </options>
         </param>
         <param field="Mode3" label="HeaterId" width="150px" required="false" default="FFFFFFFFFFFF"/>
@@ -67,11 +65,13 @@ import time
 
 from datetime import datetime, timedelta
 
-class BasePlugin:
+class Efesto:
     enabled = False
     statusLang = {"OFF","START","LAOD PELLET","FLAME LIGHT","WORK","CLEANING FIRE-POT","CLEANING FINAL","ECO-STOP","?","NO FIRE?","?","?","?","?","?","?","?","?","?","?"}
     httpConn = None
     start = 0
+    notify = False
+    protocol = "HTTP"
     
     def __init__(self):
         return
@@ -85,14 +85,15 @@ class BasePlugin:
         self.pollInterval = int(Parameters["Mode1"])  #Time in seconds between two polls
         self.heaterId = Parameters["Mode3"]
         self.sessionId = Parameters["Mode4"]
-        self.remember = Parameters["Mode5"]
         
-        if mid(Parameters["Address"],0,7) == "http://":
+        if Parameters["Address"][0:7] == "http://":
             self.port = 80
             self.host = Parameters["Address"][7:]
-        elif mid(url,0,8) == "https://"  :
+            self.protocol = "HTTP"
+        elif Parameters["Address"][0:8] == "https://"  :
             self.port = 443
             self.host = Parameters["Address"][8:]
+            self.protocol = "HTTPS"
         else:
             Domoticz.Error("URL Prefix is wrong: 'http://' or 'https://' required.")
             return
@@ -100,12 +101,19 @@ class BasePlugin:
         self.headers = {
             'Host': self.host, 
             'Accept': 'application/json; q=0.01',
-            'Origin': self.protocol+'://'+efestoHost, 
-            'Referer': self.protocol+'://'+efestoHost+'/en/heaters/action/manage/heater/'+efestoHeaterId+'/',
+            'Origin': self.protocol+'://'+self.host, 
+            'Referer': self.protocol+'://'+self.host+'/en/heaters/action/manage/heater/'+efestoHeaterId+'/',
             'Cookie': 'PHPSESSID='+efestoSessionId+'; language=en'
         }
-        self.url = self.protocol+'://'+efestoHost+'/en/ajax/action/frontend/response/ajax/'
-                    
+        self.url = self.protocol+'://'+self.host+'/en/ajax/action/frontend/response/ajax/'
+                
+        if Parameters["Mode6"] == "Debug":
+            Domoticz.Debugging(1)
+            DumpConfigToLog()
+        
+        if Parameters["Mode2"] == "Notify":
+            self.notify = True
+            
         Domoticz.Heartbeat(self.pollInterval)
 
     def onStop(self):
@@ -281,7 +289,7 @@ class BasePlugin:
             return None
     
 global _plugin
-_plugin = BasePlugin()
+_plugin = Efesto()
 
 def onStart():
     global _plugin
